@@ -5,9 +5,14 @@ name = "pypi"
 
 [packages]
 smbus = "*"
+imutils = "*"
+numpy = "*"
 
 [dev-packages]
 pylint = "*"
 
 [requires]
 python_version = "3.7"
+
+[packages.picamera]
+extras = [ "array",]
