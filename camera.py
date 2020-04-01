@@ -1,6 +1,6 @@
 from imutils.video import VideoStream
 import imutils
-from multiprocessing import Value, Process, Pipe
+from multiprocessing import Value, Process, Pipe, Array
 import time
 import logging
 
@@ -15,7 +15,7 @@ class Camera():
         self.resolution = resolution
         self.rotation.value = rotation
         self.framerate.value = framerate
-    
+        
     
     def cam(self, conn):
         vs = VideoStream(src=0,usePiCamera=True,resolution=(640,480),framerate=5).start()
@@ -28,6 +28,7 @@ class Camera():
 
     def start(self):
         self.frame, child_conn = Pipe()
+        
         self.cam_process = Process(target=self.cam,args=(child_conn,))
         self.cam_process.start()
         logging.info("Camera process started")
