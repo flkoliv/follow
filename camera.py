@@ -28,7 +28,7 @@ class Camera():
 
     def start(self):
         self.frame, child_conn = Pipe()
-        
+
         self.cam_process = Process(target=self.cam,args=(child_conn,))
         self.cam_process.start()
         logging.info("Camera process started")
@@ -40,6 +40,9 @@ class Camera():
 
     def get_frame(self):
         return self.frame.recv()
+    
+    def get_pipe(self):
+        return self.frame
 
 if __name__ == '__main__':
     cam = Camera((640,480),180,15)

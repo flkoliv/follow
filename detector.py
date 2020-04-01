@@ -2,6 +2,7 @@ from multiprocessing import Pipe, Process
 import cv2
 import time
 import datetime
+from camera import Camera
 
 
 class Detector():
@@ -30,15 +31,34 @@ class Detector():
                 "%d/%m/%Y %H:%M:%S"), (10, frame.shape[0] - 10),
                 cv2.FONT_HERSHEY_SIMPLEX, 0.70, (0, 0, 255), 2)
             outputFrame = frame.copy()
-            outconn.snd(outputFrame)
+            outconn.send(outputFrame)
 
     def start(self):
         self.detector_process = Process(target=self.detection,args=(self.input_frame_child,self.output_frame_child))
         self.detector_process.start()
 
+    def get_frame(self):
+        return self.output_frame_parent.recv()
+
     def get_input_pipe(self):
         return self.input_frame_parent
 
 if __name__ == '__main__':
+    cam = Camera((640,480),180,15)
+    cam.start()
+    cam.get_frame()
     d = Detector()
+    
     d.start()
+    start_time = time.time()
+    x = 1 # displays the frame rate every 1 second
+    counter = 0
+    while True:
+        d.get_input_pipe().send(cam.get_frame())
+        d.get_frame()
+        counter +=1
+        
+        if (time.time() - start_time) > x :
+            print("FPS: ", counter / (time.time() - start_time))
+            counter = 0
+            start_time = time.time()
