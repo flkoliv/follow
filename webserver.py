@@ -5,10 +5,12 @@ from flask import request
 import cv2
 import argparse
 from camera import Camera
+from detector import Detector
+from pantilthat import PanTiltHat
 
 
 app = Flask(__name__)
-cam = Camera((320,240),180,15)
+cam = Camera((320,240),180,25)
 
 @app.route("/", methods = ['GET', 'POST'])
 def index():
@@ -60,8 +62,16 @@ if __name__ == '__main__':
         help="# of frames used to construct the background model")
     args = vars(ap.parse_args())
     #start camera
+    detect = Detector()
+    detect.start()
+    pantilt = PanTiltHat()
+    pantilt.start()
+    cam.set_detector(detect)
+    cam.set_pantilthat(pantilt)
     cam.start()
     # start the flask app
     app.run(host=args["ip"], port=args["port"], debug=True,
         threaded=True, use_reloader=False)
-    #cam.stop()
+    cam.stop()
+    detect.stop()
+    pantilt.stop()

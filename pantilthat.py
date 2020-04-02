@@ -15,7 +15,7 @@ import logging
 class PanTiltHat:
     SERVO_MIN = -90
     SERVO_MAX = 90
-    RESOLUTION = (320, 320)
+    RESOLUTION = (320, 240)
     CENTER = (RESOLUTION[0] // 2, RESOLUTION[1] // 2)
 
     def __init__(self):
@@ -29,9 +29,9 @@ class PanTiltHat:
         self.target_y.value = PanTiltHat.RESOLUTION[1] // 2
         
         # PID gains for panning
-        self.pan_p = Value('f', 0.05)
-        self.pan_i = Value('f', 0.1)
-        self.pan_d = Value('f', 0)
+        self.pan_p = Value('f', 0.15) #0.05
+        self.pan_i = Value('f', 0.11)#0.1
+        self.pan_d = Value('f', 0)#0
 
         # PID gains for tilting
         self.tilt_p = Value('f', 0.15)
@@ -55,7 +55,7 @@ class PanTiltHat:
     def set_servos(self, pan, tilt):
         while True:
             pAngle = pan.value
-            tAngle = tilt.value
+            tAngle = tilt.value*-1
             if self.in_range(pAngle, PanTiltHat.SERVO_MIN, PanTiltHat.SERVO_MAX):
                 self.pwm.setRotationAngle(1, pAngle+90)
             else:
@@ -72,7 +72,6 @@ class PanTiltHat:
             error = origin_coord - box_coord.value
             out = p.update(error)
             output.value = int(out)
-            print(action + " - " + str(error) + " - "+ str(output.value) + "-"+str(out))
 
     def start(self):
         self.pan_process = Process(target=self.pid_process,
@@ -80,8 +79,9 @@ class PanTiltHat:
         self.tilt_process = Process(target=self.pid_process,
                                args=(self.tiltAngle, self.tilt_p, self.tilt_i, self.tilt_d, self.target_y, PanTiltHat.CENTER[1], 'tilt'))
         self.servo_process = Process(target=self.set_servos, args=(self.panAngle, self.tiltAngle))
-        
         self.servo_process.start()
+        self.pan_process.start()
+        self.tilt_process.start()
     
     def pid_start(self):
         self.pan_process.start()
@@ -102,16 +102,16 @@ class PanTiltHat:
         self.servo_process.terminate()
         sys.exit()
     
+    def set_target(self, target):
+        self.target_x.value,self.target_y.value = target
 
 if __name__ == '__main__':
     p = PanTiltHat()
     p.start()
-    p.pid_start()
     time.sleep(2)
     # p.setPosition(120,120)
     # time.sleep(2)
-    p.target_x.value = 0
-    p.target_y.value = 0
+    p.set_target((0,0))
     # p.setPosition(30,30)
     # time.sleep(2)
     # p.setPosition(60,60)
