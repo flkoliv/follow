@@ -59,6 +59,7 @@ if __name__ == '__main__':
     ap.add_argument("-f", "--frame-count", type=int, default=32,
         help="# of frames used to construct the background model")
     args = vars(ap.parse_args())
+    #start camera
     cam.start()
     # start the flask app
     app.run(host=args["ip"], port=args["port"], debug=True,
