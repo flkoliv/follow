@@ -9,21 +9,28 @@ class Camera():
 
     def __init__(self, resolution, rotation, framerate ):
         self.frame = None
-        self.resolution = Value('i',0)
+        self.resolutionX = Value('i',0)
+        self.resolutionY = Value('i',0)
         self.rotation = Value('i',0)
         self.framerate = Value('i',0)
-        self.resolution = resolution
+        self.resolutionX.value = resolution[0]
+        self.resolutionY.value = resolution[1]
         self.rotation.value = rotation
         self.framerate.value = framerate
         
     
     def cam(self, conn):
-        vs = VideoStream(src=0,usePiCamera=True,resolution=(640,480),framerate=5).start()
+        
+        vs = VideoStream(
+            src=0,
+            usePiCamera=True,
+            resolution=(self.resolutionX.value,self.resolutionY.value),
+            framerate=self.framerate.value).start()
         time.sleep(2) #waiting the camera to start
         while True:
             frame = vs.read()
-            frame = imutils.resize(frame, width=640)
-            frame = imutils.rotate(frame,angle=180)
+            #frame = imutils.resize(frame, width=640)
+            frame = imutils.rotate(frame,angle=self.rotation.value)
             conn.send(frame)
 
     def start(self):
@@ -31,6 +38,7 @@ class Camera():
 
         self.cam_process = Process(target=self.cam,args=(child_conn,))
         self.cam_process.start()
+        time.sleep(2)
         logging.info("Camera process started")
 
     def stop(self):
@@ -49,7 +57,6 @@ if __name__ == '__main__':
     cam.start()
     time.sleep(2)
     print(cam.get_frame())
-    time.sleep(2)
     print(cam.get_frame())
     time.sleep(2)
     print(cam.get_frame())

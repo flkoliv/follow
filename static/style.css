@@ -1,0 +1,88 @@
+*{
+  margin: auto;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.cadre{
+  display: flex;
+  flex-direction: column;
+  padding: 0px 0px 70px 0px;
+  width: 800px;
+  background: linear-gradient( #555, #FFE4C4);
+  justify-content: space-around;
+}
+
+img {
+	width: 640px;
+	height: 480px;
+	box-shadow: 0 0 5px rgba( 0, 0, 0, 0.5),
+		0 -1px 0 rgba( 255, 255, 255, 0.4);
+}
+#crossCenter{
+  background-color: #333333;
+  width: 35px;
+  height: 35px;
+  border-radius: 100%;
+  margin-top: 60px;
+  position: relative;
+}
+
+#crossCircle{
+  background-color: yellow;
+  width: 24px;
+  height: 24px;
+  border-radius: 100%;
+  position: relative;
+  transform: translateY(5px);
+}
+
+#crossTop{
+  margin-top: -40px;
+}
+#crossBottom{
+  margin-top: 40px;
+}
+#crossLeft{
+  margin-left: -40px;
+}
+
+#crossRight{
+  margin-left: 40px;
+}
+
+.crossButton{
+  width: 35px;
+  height: 35px;
+  position: absolute;
+  border-radius: 15%;
+  font-family: Arial,sans-serif;
+  font-size: 1.6em;
+  padding-top: 0px; /*permet le centrage vertical*/
+  text-align: center;
+  color: #000;
+  background: #444;
+  background: linear-gradient( #555, #2C2C2C);
+  text-shadow: 0px 1px 0px rgba( 255, 255, 255, 0.2);
+  box-shadow: 0 0 5px rgba( 0, 0, 0, 0.5),
+                 0 -1px 0 rgba( 255, 255, 255, 0.4);
+  
+}
+
+.crossButton:hover{
+  color: #222;
+  background: #555;
+  background: linear-gradient( #777, #333);
+}
+
+.crossButton:active{
+     color: #000;
+     background: #444;
+     background: linear-gradient( #555, #2C2C2C);
+     box-shadow: 1px 1px 10px black inset, 
+                 0 1px 0 rgba( 255, 255, 255, 0.4);
+}
+
+#crossCircle:hover{
+  background-color: red;
+}
