@@ -20,7 +20,7 @@ def index():
         print(move)
         buttonclicked = request.form['button']
         print(buttonclicked)
-        moveCam(buttonclicked,1)
+        #moveCam(buttonclicked,1)
         
         return render_template("index.html")
     elif request.method == "POST" and request.form['stop'] == "True":
