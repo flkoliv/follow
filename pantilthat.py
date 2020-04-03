@@ -82,10 +82,6 @@ class PanTiltHat:
         self.servo_process.start()
         self.pan_process.start()
         self.tilt_process.start()
-    
-    def pid_start(self):
-        self.pan_process.start()
-        self.tilt_process.start()
 
     def pid_stop(self):
         if self.pan_process.is_alive():
